@@ -61,3 +61,6 @@ def send_data(input_data, bits_count):
 
         #waiting 10ms between data stream
         time.sleep(0.010)
+
+
+send_data(variable, 12)
