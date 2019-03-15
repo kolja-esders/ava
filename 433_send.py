@@ -1,9 +1,11 @@
 import RPi.GPIO as GPIO
 import time
 
-variable = 0b000001011101
+variable = 0b000000111110
 GPIO_NUMBER = 14
 
+short_delay = 0.000270
+long_delay = 0.000870
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -12,31 +14,31 @@ GPIO.setup(GPIO_NUMBER, GPIO.OUT)
 
 def send_sync_bit():
     GPIO.output(GPIO_NUMBER, GPIO.HIGH)
-    time.sleep(0.000400)
+    time.sleep(short_delay)
     GPIO.output(GPIO_NUMBER, GPIO.LOW)
-    time.sleep(0.001000)
+    time.sleep(long_delay)
 
 
 def send_zero():
     GPIO.output(GPIO_NUMBER, GPIO.HIGH)
-    time.sleep(0.000400)
+    time.sleep(short_delay)
     GPIO.output(GPIO_NUMBER, GPIO.LOW)
-    time.sleep(0.001000)
+    time.sleep(long_delay)
     GPIO.output(GPIO_NUMBER, GPIO.HIGH)
-    time.sleep(0.000400)
+    time.sleep(short_delay)
     GPIO.output(GPIO_NUMBER, GPIO.LOW)
-    time.sleep(0.001000)
+    time.sleep(long_delay)
 
 
 def send_one():
     GPIO.output(GPIO_NUMBER, GPIO.HIGH)
-    time.sleep(0.000400)
+    time.sleep(short_delay)
     GPIO.output(GPIO_NUMBER, GPIO.LOW)
-    time.sleep(0.001000)
+    time.sleep(long_delay)
     GPIO.output(GPIO_NUMBER, GPIO.HIGH)
-    time.sleep(0.001000)
+    time.sleep(long_delay)
     GPIO.output(GPIO_NUMBER, GPIO.LOW)
-    time.sleep(0.00400)
+    time.sleep(short_delay)
 
 
 def send_data(input_data, bits_count):
