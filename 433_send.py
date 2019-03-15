@@ -41,14 +41,14 @@ def send_one():
 
 def send_data(input_data, bits_count):
 
-    for i in range(0, 5):
+    for i in range(0, 500):
 
         bits_count_work = bits_count
         input_data_work = input_data
 
         while bits_count_work > 0:
 
-            if input_data & (1 << 11):
+            if input_data_work & (1 << 11):
                 send_one()
             
             else:
