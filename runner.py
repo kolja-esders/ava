@@ -28,43 +28,12 @@ STREAM_ID                        = 'mic'
 
 misc.init_app(PROC_TITLE)
 
-#
-# cmdline, logging
-#
-"""
-parser = OptionParser("usage: %prog [options]")
+logging.basicConfig(level=logging.INFO)
 
-parser.add_option ("-a", "--aggressiveness", dest="aggressiveness", type = "int", default=DEFAULT_AGGRESSIVENESS,
-                   help="VAD aggressiveness, default: %d" % DEFAULT_AGGRESSIVENESS)
-
-parser.add_option ("-m", "--model-dir", dest="model_dir", type = "string", default=DEFAULT_MODEL_DIR,
-                   help="kaldi model directory, default: %s" % DEFAULT_MODEL_DIR)
-
-parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
-                   help="verbose output")
-
-parser.add_option ("-s", "--source", dest="source", type = "string", default=None,
-                   help="pulseaudio source, default: auto-detect mic")
-
-parser.add_option ("-V", "--volume", dest="volume", type = "int", default=DEFAULT_VOLUME,
-                   help="broker port, default: %d" % DEFAULT_VOLUME)
-"""
-
-model_dir = DEFAULT_MODEL_DIR
+source         = 'USB PnP Sound'
+volume         = DEFAULT_VOLUME
 aggressiveness = DEFAULT_AGGRESSIVENESS
-
-
-(options, args) = parser.parse_args()
-
-if options.verbose:
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.INFO)
-
-source         = options.source
-volume         = options.volume
-aggressiveness = options.aggressiveness
-model_dir      = options.model_dir
+model_dir      = DEFAULT_MODEL_DIR
 
 rec = PulseRecorder (source_name=source, volume=volume)
 
@@ -81,6 +50,16 @@ rec.start_recording()
 print "Please speak."
 
 def main():
+    light_device = Device()
+
+    turn_light_on = DetectionSequence(sequence=['turn', 'light', 'on'])
+    turn_on_light = DetectionSequence(sequence=['turn', 'on', 'light'])
+
+    detection_sequences = [turn_light_on, turn_on_light]
+
+    commands = []
+    light_on_cmd = SpeechCommand()
+
     while True:
 
         samples = rec.get_samples()
@@ -97,7 +76,7 @@ def main():
         print "\r%s                     " % user_utt,
 
         if finalize:
-            print
+            print 'NEW:', user_utt, confidence
 
 if __name__ == '__main__':
     main()
