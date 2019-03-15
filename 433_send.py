@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-variable = 0b000000111110
+
 GPIO_NUMBER = 14
 
 short_delay = 0.000270
@@ -41,7 +41,9 @@ def send_one():
     time.sleep(short_delay)
 
 
-def send_data(input_data, bits_count):
+def send_data(input_data):
+
+    bits_count = 12
 
     for i in range(0, 10):
 
@@ -63,6 +65,3 @@ def send_data(input_data, bits_count):
 
         #waiting 10ms between data stream
         time.sleep(0.010)
-
-
-send_data(variable, 12)
