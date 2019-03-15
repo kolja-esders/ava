@@ -12,36 +12,36 @@ GPIO.setup(GPIO_NUMBER, GPIO.OUT)
 
 def send_sync_bit():
     GPIO.output(GPIO_NUMBER, GPIO.HIGH)
-    time.sleep(0.00015)
+    time.sleep(0.000305)
     GPIO.output(GPIO_NUMBER, GPIO.LOW)
-    time.sleep(0.00045)
+    time.sleep(0.000905)
 
 
 def send_zero():
     GPIO.output(GPIO_NUMBER, GPIO.HIGH)
-    time.sleep(0.00015)
+    time.sleep(0.000305)
     GPIO.output(GPIO_NUMBER, GPIO.LOW)
-    time.sleep(0.00045)
+    time.sleep(0.000905)
     GPIO.output(GPIO_NUMBER, GPIO.HIGH)
-    time.sleep(0.00015)
+    time.sleep(0.000305)
     GPIO.output(GPIO_NUMBER, GPIO.LOW)
-    time.sleep(0.00045)
+    time.sleep(0.000905)
 
 
 def send_one():
     GPIO.output(GPIO_NUMBER, GPIO.HIGH)
-    time.sleep(0.00015)
+    time.sleep(0.000305)
     GPIO.output(GPIO_NUMBER, GPIO.LOW)
-    time.sleep(0.00045)
+    time.sleep(0.000905)
     GPIO.output(GPIO_NUMBER, GPIO.HIGH)
-    time.sleep(0.00045)
+    time.sleep(0.000905)
     GPIO.output(GPIO_NUMBER, GPIO.LOW)
-    time.sleep(0.00015)
+    time.sleep(0.000305)
 
 
 def send_data(input_data, bits_count):
 
-    for i in range(0, 500):
+    for i in range(0, 10):
 
         bits_count_work = bits_count
         input_data_work = input_data
