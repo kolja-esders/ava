@@ -1,3 +1,4 @@
+import send
 
 class DetectionSequence:
     def __init__(self, sequence):
@@ -18,7 +19,7 @@ class DetectionSequence:
         return ''.join(chars)
 
     def matches(self, text):
-        """ Returns whether this DetecionSequence matches the given text.
+        """ Returns whether this DetectionSequence matches the given text.
 
 	The matching process is agnostic of text capitalization.
 
@@ -65,7 +66,7 @@ class SpeechCommand:
 
     def execute(self):
         for d in self.devices:
-            self.action(d)
+            self.action.execute(d)
 
 
 class Device:
@@ -78,21 +79,51 @@ class Device:
 class Action:
     """ Operations that are executed on given devices. """
 
+    def __init__(self, cmd):
+        self.cmd = cmd
+
     def execute(self, device):
-        pass
+        self.cmd(device)
 
 
-class LightDevice extends Device:
+class LightDevice(Device):
     """ spaß """
 
     def turn_on(id):
         device_id = 0b0000001111
         command = 0b01
-        paket =  device_id << 2 + command
-        send_data(paket)
+        packet =  device_id << 2 + command
+        send_data(packet)
 
     def turn_off(id):
         device_id = 0b0000001111
         command = 0b10
-        paket =  device_id << 2 + command
-        send_data(paket)
+        packet =  device_id << 2 + command
+        send_data(packet)
+
+def main():
+    light_device = Device()
+
+    turn_light_on = DetectionSequence(sequence=['turn', 'light', 'on'])
+    turn_on_light = DetectionSequence(sequence=['turn', 'on', 'light'])
+
+    detection_sequences = [turn_light_on, turn_on_light]
+
+    device = LightDevice()
+
+    set_light_on = Action(lambda l: l.turn_on())
+    #set_light_off = Action(lambda l: l.turn_off())
+
+    commands = [SpeechCommand([device], set_light_on, detection_sequences)]
+
+    utterance = 'turn on the light.'
+
+    # Handle the current utterance.
+
+    for c in commands:
+        if c.matches(utterance):
+            c.execute()
+
+
+if __name__ == '__main__':
+    main()

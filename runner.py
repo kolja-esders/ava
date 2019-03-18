@@ -9,6 +9,8 @@ from nltools.vad import VAD, BUFFER_DURATION
 from nltools.asr import ASR, ASR_ENGINE_NNET3
 from optparse import OptionParser
 
+from command import LightDevice, SpeechCommand, DetectionSequence, Action
+
 PROC_TITLE                       = 'kaldi_live_demo'
 
 DEFAULT_VOLUME                   = 150
@@ -21,10 +23,6 @@ DEFAULT_BEAM                     = 7.0
 DEFAULT_FRAME_SUBSAMPLING_FACTOR = 3
 
 STREAM_ID                        = 'mic'
-
-#
-# init
-#
 
 misc.init_app(PROC_TITLE)
 
@@ -47,7 +45,7 @@ asr = ASR(engine = ASR_ENGINE_NNET3, model_dir = model_dir,
 
 rec.start_recording()
 
-print "Please speak."
+print "ava: we are live"
 
 
 def handle(user_utt):
@@ -73,8 +71,12 @@ def main():
 
     detection_sequences = [turn_light_on, turn_on_light]
 
-    commands = []
-    light_on_cmd = SpeechCommand()
+    device = LightDevice()
+
+    set_light_on = Action(lambda l: l.turn_on())
+    #set_light_off = Action(lambda l: l.turn_off())
+
+    commands = [SpeechCommand([device], action)]
 
     while True:
 
@@ -88,6 +90,8 @@ def main():
         logging.debug ('decoding audio len=%d finalize=%s audio=%s' % (len(audio), repr(finalize), audio[0].__class__))
 
         user_utt, confidence = asr.decode(audio, finalize, stream_id=STREAM_ID)
+
+
 
         print "\r%s                     " % user_utt,
 
