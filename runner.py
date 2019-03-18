@@ -37,7 +37,7 @@ rec = PulseRecorder (source_name=source, volume=volume)
 
 vad = VAD(aggressiveness=aggressiveness)
 
-print "Loading model from %s ..." % model_dir
+print("Loading model from %s ..." % model_dir)
 
 asr = ASR(engine = ASR_ENGINE_NNET3, model_dir = model_dir,
           kaldi_beam = DEFAULT_BEAM, kaldi_acoustic_scale = DEFAULT_ACOUSTIC_SCALE,
@@ -45,13 +45,9 @@ asr = ASR(engine = ASR_ENGINE_NNET3, model_dir = model_dir,
 
 rec.start_recording()
 
-print "ava: we are live"
+print("ava: we are live")
 
-
-def handle(user_utt):
-
-
-def has_trigger_word(string):
+def has_trigger_word(user_utt):
     words = user_utt.split()
     len_words = len(words)
 
@@ -62,8 +58,7 @@ def has_trigger_word(string):
 
     return False
 
-
-def main():
+def handle(utterance):
     light_device = Device()
 
     turn_light_on = DetectionSequence(sequence=['turn', 'light', 'on'])
@@ -76,29 +71,33 @@ def main():
     set_light_on = Action(lambda l: l.turn_on())
     #set_light_off = Action(lambda l: l.turn_off())
 
-    commands = [SpeechCommand([device], action)]
+    commands = [SpeechCommand([device], set_light_on, detection_sequences)]
 
-    while True:
+    utterance = 'turn on the light.'
 
-        samples = rec.get_samples()
+    # Handle the current utterance.
 
-        audio, finalize = vad.process_audio(samples)
+    for c in commands:
+        if c.matches(utterance):
+            c.execute()
 
-        if not audio:
-            continue
+while True:
 
-        logging.debug ('decoding audio len=%d finalize=%s audio=%s' % (len(audio), repr(finalize), audio[0].__class__))
+    samples = rec.get_samples()
 
-        user_utt, confidence = asr.decode(audio, finalize, stream_id=STREAM_ID)
+    audio, finalize = vad.process_audio(samples)
 
+    if not audio:
+        continue
 
+    logging.debug ('decoding audio len=%d finalize=%s audio=%s' % (len(audio), repr(finalize), audio[0].__class__))
 
-        print "\r%s                     " % user_utt,
+    user_utt, confidence = asr.decode(audio, finalize, stream_id=STREAM_ID)
 
-        if finalize:
-            if(has_trigger_word(user_utt)):
-                handle(user_utt)
-            print 'NEW:', user_utt, confidence
+    print '\r%s' % user_utt
 
-if __name__ == '__main__':
-    main()
+    if finalize:
+        print
+        #if(has_trigger_word(user_utt)):
+        #    handle(user_utt)
+        #print('NEW:', user_utt, confidence)
