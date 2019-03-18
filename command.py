@@ -80,3 +80,19 @@ class Action:
 
     def execute(self, device):
         pass
+
+
+class LightDevice extends Device:
+    """ spaß """
+
+    def turn_on(id):
+        device_id = 0b0000001111
+        command = 0b01
+        paket =  device_id << 2 + command
+        send_data(paket)
+
+    def turn_off(id):
+        device_id = 0b0000001111
+        command = 0b10
+        paket =  device_id << 2 + command
+        send_data(paket)
