@@ -47,6 +47,22 @@ rec.start_recording()
 
 print "ava: we are live"
 
+
+def handle(user_utt):
+
+
+def has_trigger_word(string):
+    words = user_utt.split()
+    len_words = len(words)
+
+    for k in range (0, len_words):
+        if words[k] == "computer":
+            print("NICE")
+            return True
+
+    return False
+
+
 def main():
     light_device = Device()
 
@@ -80,6 +96,8 @@ def main():
         print "\r%s                     " % user_utt,
 
         if finalize:
+            if(has_trigger_word(user_utt)):
+                handle(user_utt)
             print 'NEW:', user_utt, confidence
 
 if __name__ == '__main__':
