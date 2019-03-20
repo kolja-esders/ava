@@ -1,4 +1,4 @@
-from send import send_data
+from send import send_command
 
 class DetectionSequence:
     def __init__(self, sequence):
