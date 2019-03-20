@@ -25,19 +25,19 @@ This will listen to any speech commands that start with the `WAKEUP_WORD` that i
 A command consists of the device that should be controlled, an action that is executed on the device and a number of detection sequences to detect whether a given speech text should trigger the command.
 
 ```
-# Command to turn on a light source
+# This will create a command to turn on a light source.
 
-# The light source to active or deactive
+# The light source to active or deactivate
 light = LightDevice(id=1)
 
 # Any speech sequence containing 'turn', 'on', 'kitchen', 'light' in this order will trigger the command.
 detection_seq = ['turn', 'on', 'kitchen', 'light']
 
-# 
-action
+# The action is to turn on the light.
+action = Action(lambda l: l.turn_on())
 
 # Constructs the command
-cmd = SpeechCommand(devices=[light], )
+cmd = SpeechCommand(devices=[light], action=action, detection_sequences=[detection_seq])
 
 # Add the command to the SpeechHandler in runner.py
 ```
