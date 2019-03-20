@@ -103,3 +103,5 @@ def send_command(device, action):
     GPIO.output(BIT_0, 0)
     GPIO.output(BIT_1, 0)
     GPIO.output(BIT_2, 0)
+
+#send_command(1, 1)
