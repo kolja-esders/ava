@@ -28,7 +28,7 @@ misc.init_app(PROC_TITLE)
 
 logging.basicConfig(level=logging.INFO)
 
-source         = 'USB PnP Sound'
+source         = 'USB Audio Device Analog'
 volume         = DEFAULT_VOLUME
 aggressiveness = DEFAULT_AGGRESSIVENESS
 model_dir      = DEFAULT_MODEL_DIR
@@ -53,29 +53,34 @@ def has_trigger_word(user_utt):
 
     for k in range (0, len_words):
         if words[k] == "computer":
-            print("NICE")
             return True
 
     return False
 
 def handle(utterance):
-    light_device = Device()
+    #print 'Handling stuff...'
 
     turn_light_on = DetectionSequence(sequence=['turn', 'light', 'on'])
     turn_on_light = DetectionSequence(sequence=['turn', 'on', 'light'])
+    turn_on_lights = DetectionSequence(sequence=['turn', 'on', 'lights'])
 
-    detection_sequences = [turn_light_on, turn_on_light]
+    turn_light_off = DetectionSequence(sequence=['turn', 'light', 'off'])
+    turn_off_light = DetectionSequence(sequence=['turn', 'off', 'light'])
+    turn_off_lights = DetectionSequence(sequence=['turn', 'off', 'lights'])
+
+    on_detection_sequences = [turn_light_on, turn_on_light, turn_on_lights]
+
+    off_detection_sequences = [turn_light_off, turn_off_light, turn_off_lights]
 
     device = LightDevice()
 
     set_light_on = Action(lambda l: l.turn_on())
-    #set_light_off = Action(lambda l: l.turn_off())
+    set_light_off = Action(lambda l: l.turn_off())
 
-    commands = [SpeechCommand([device], set_light_on, detection_sequences)]
+    on_cmd = SpeechCommand([device], set_light_on, on_detection_sequences)
+    off_cmd = SpeechCommand([device], set_light_off, off_detection_sequences)
 
-    utterance = 'turn on the light.'
-
-    # Handle the current utterance.
+    commands = [on_cmd, off_cmd]
 
     for c in commands:
         if c.matches(utterance):
@@ -94,10 +99,9 @@ while True:
 
     user_utt, confidence = asr.decode(audio, finalize, stream_id=STREAM_ID)
 
-    print '\r%s' % user_utt
+    print "\r%s                     " % user_utt,
 
     if finalize:
         print
-        #if(has_trigger_word(user_utt)):
-        #    handle(user_utt)
-        #print('NEW:', user_utt, confidence)
+        if has_trigger_word(user_utt):
+            handle(user_utt)
