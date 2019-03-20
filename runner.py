@@ -48,7 +48,6 @@ asr = ASR(engine = ASR_ENGINE_NNET3, model_dir = model_dir,
 
 rec.start_recording()
 
-cmd_handler = init_speech_command_handler()
 
 print("ava: we are live")
 
@@ -87,6 +86,7 @@ def init_speech_command_handler():
 
     return handler
 
+cmd_handler = init_speech_command_handler()
 
 while True:
     samples = rec.get_samples()
@@ -103,7 +103,7 @@ while True:
     print "\r%s                     " % user_utt,
 
     # Look for wakeup word and command before the utterance has been finalized
-    cmd_index = find_cmd_start_index(user_utt):
+    cmd_index = find_cmd_start_index(user_utt)
     if cmd_index != -1:
         cmd_handler.process(user_utt, cmd_index)
 

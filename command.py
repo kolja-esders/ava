@@ -1,4 +1,4 @@
-import send
+from send import send_data
 
 class DetectionSequence:
     def __init__(self, sequence):
@@ -36,13 +36,11 @@ class DetectionSequence:
         seq_ptr = 0
         words_ptr = 0
 
-        print(self.sequence, words)
-
         while seq_ptr < len(self.sequence) and words_ptr < len(words):
             if self.sequence[seq_ptr] == words[words_ptr]:
                 seq_ptr += 1
             words_ptr += 1
-            
+        
         return seq_ptr == len(self.sequence)
 
 
@@ -87,19 +85,26 @@ class Action:
 
 
 class LightDevice(Device):
-    """ spaß """
-
     def turn_on(id):
+        print('Going on')
         device_id = 0b0000001111
         command = 0b01
-        packet =  device_id << 2 + command
-        send_data(packet)
+        packet =  (device_id << 2) + command
+        print(packet)
+        #send_data(packet)
+        send_command(1, 1)
+
 
     def turn_off(id):
+        print('Going off')
         device_id = 0b0000001111
         command = 0b10
-        packet =  device_id << 2 + command
-        send_data(packet)
+        packet = 0b111110
+        #packet =  (device_id << 2) + command
+        print(packet)
+        #send_data(packet)
+        send_command(1, 0)
+
 
 def main():
     light_device = Device()
@@ -107,21 +112,30 @@ def main():
     turn_light_on = DetectionSequence(sequence=['turn', 'light', 'on'])
     turn_on_light = DetectionSequence(sequence=['turn', 'on', 'light'])
 
-    detection_sequences = [turn_light_on, turn_on_light]
+    turn_light_off = DetectionSequence(sequence=['turn', 'light', 'off'])
+    turn_off_light = DetectionSequence(sequence=['turn', 'off', 'light'])
+
+    on_detection_sequences = [turn_light_on, turn_on_light]
+
+    off_detection_sequences = [turn_light_off, turn_off_light]
 
     device = LightDevice()
 
     set_light_on = Action(lambda l: l.turn_on())
-    #set_light_off = Action(lambda l: l.turn_off())
+    set_light_off = Action(lambda l: l.turn_off())
 
-    commands = [SpeechCommand([device], set_light_on, detection_sequences)]
+    on_cmd = SpeechCommand([device], set_light_on, on_detection_sequences)
+    off_cmd = SpeechCommand([device], set_light_off, off_detection_sequences)
 
-    utterance = 'turn on the light.'
+    commands = [on_cmd, off_cmd]
+
+    utterance = 'turn off the light.'
 
     # Handle the current utterance.
 
     for c in commands:
         if c.matches(utterance):
+            print('Found match, executing.')
             c.execute()
 
 

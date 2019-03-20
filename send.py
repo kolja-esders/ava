@@ -4,12 +4,13 @@ import time
 
 GPIO_NUMBER = 14
 
-short_delay = 0.000270
-long_delay = 0.000870
+short_delay = 0.000265
+long_delay = 0.000865
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(GPIO_NUMBER, GPIO.OUT)
+GPIO.setup(15, GPIO.OUT)
 
 
 def send_sync_bit():
@@ -42,8 +43,8 @@ def send_one():
 
 
 def send_data(input_data):
-
     bits_count = 12
+    input_data = 0b000000111110
 
     for i in range(0, 10):
 
@@ -65,3 +66,14 @@ def send_data(input_data):
 
         #waiting 10ms between data stream
         time.sleep(0.010)
+
+
+def send_command(device, action):
+    
+    GPIO.output(14, device)
+    GPIO.output(15, action)
+
+    time.sleep(0.5)
+
+
+#send_command(1, 0)
