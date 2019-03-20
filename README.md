@@ -1,3 +1,5 @@
+![cover](https://user-images.githubusercontent.com/5159563/54703066-65d1a280-4b38-11e9-944e-c6d37a4c0d39.png)
+
 # Ava
 
 Inspired by [Ex Machina](https://en.wikipedia.org/wiki/Ex_Machina_(film)), Ava is an Automated Speech Recognition (ASR) system used to control your home devices through voice (like Amazon Alexa).
