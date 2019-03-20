@@ -64,7 +64,7 @@ def send_data(input_data):
         
         send_sync_bit()
 
-        #waiting 10ms between data stream
+        # Waiting 10ms between data packets.
         time.sleep(0.010)
 
 
@@ -74,6 +74,3 @@ def send_command(device, action):
     GPIO.output(15, action)
 
     time.sleep(0.5)
-
-
-#send_command(1, 0)
