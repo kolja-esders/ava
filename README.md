@@ -1,8 +1,8 @@
 # Ava
 
-Automated Speech Recognition (ASR) system used to control your home devices through voice (like Amazon Alexa).
+Inspired by [Ex Machina](https://en.wikipedia.org/wiki/Ex_Machina_(film)), Ava is an Automated Speech Recognition (ASR) system used to control your home devices through voice (like Amazon Alexa).
 
-Ava is designed to be light on resources and can be executed on a Raspberry Pi 3.
+The system is designed to be light on resources and can be executed on a Raspberry Pi 3.
 
 Devices can be enabled or disabled by using RF power sockets. These sockets are controlled by an Arduino that in turn receives commands from the ASR running on the Raspberry Pi.
 
