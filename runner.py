@@ -9,8 +9,8 @@ from nltools.vad import VAD, BUFFER_DURATION
 from nltools.asr import ASR, ASR_ENGINE_NNET3
 from optparse import OptionParser
 
-from command import LightDevice, SpeechCommand, DetectionSequence, Action
-from speech_command_handler import SpeechCommandHandler
+from lib.command import LightDevice, SpeechCommand, DetectionSequence, Action
+from lib.speech_command_handler import SpeechCommandHandler
 
 PROC_TITLE                       = 'kaldi_live_demo'
 
