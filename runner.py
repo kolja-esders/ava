@@ -88,6 +88,8 @@ def init_speech_command_handler():
 
 cmd_handler = init_speech_command_handler()
 
+utterance_consumed = False
+
 while True:
     samples = rec.get_samples()
 
@@ -105,7 +107,8 @@ while True:
     # Look for wakeup word and command before the utterance has been finalized
     cmd_index = find_cmd_start_index(user_utt)
     if cmd_index != -1:
-        cmd_handler.process(user_utt, cmd_index)
+        utterance_consumed = utterance_consumed or cmd_handler.process(user_utt, cmd_index)
 
     if finalize:
+        utterance_consumed = False
         print
