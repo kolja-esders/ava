@@ -11,7 +11,16 @@ Devices can be enabled or disabled by using RF power sockets. These sockets are 
 - Python 2.7
 - [zamia-speech](https://github.com/gooofy/zamia-speech)
 
-## Add a command
+## Execution
+
+```
+python runner.py
+# nohup python runner.py & if the task should permanently run in the background
+```
+
+This will listen to any speech commands that start with the `WAKEUP_WORD` that is specified in `runner.py`. Per default this will be `computer`.
+
+## Add a custom command
 
 A command consists of the device that should be controlled, an action that is executed on the device and a number of detection sequences to detect whether a given speech text should trigger the command.
 
@@ -32,12 +41,3 @@ cmd = SpeechCommand(devices=[light], )
 
 # Add the command to the SpeechHandler in runner.py
 ```
-
-## Execution
-
-```
-python runner.py
-# nohup python runner.py & if the task should permanently run in the background
-```
-
-This will listen to any speech commands that start with the `WAKEUP_WORD` that is specified in `runner.py`. Per default this will be `computer`.
