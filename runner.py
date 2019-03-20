@@ -10,8 +10,11 @@ from nltools.asr import ASR, ASR_ENGINE_NNET3
 from optparse import OptionParser
 
 from command import LightDevice, SpeechCommand, DetectionSequence, Action
+from speech_command_handler import SpeechCommandHandler
 
 PROC_TITLE                       = 'kaldi_live_demo'
+
+WAKEUP_WORD                      = 'Computer'.lower()
 
 DEFAULT_VOLUME                   = 150
 DEFAULT_AGGRESSIVENESS           = 2
@@ -45,21 +48,19 @@ asr = ASR(engine = ASR_ENGINE_NNET3, model_dir = model_dir,
 
 rec.start_recording()
 
+cmd_handler = init_speech_command_handler()
+
 print("ava: we are live")
 
-def has_trigger_word(user_utt):
-    words = user_utt.split()
-    len_words = len(words)
+def find_cmd_start_index(utterance):
+    index = utterance.find(WAKEUP_WORD)
 
-    for k in range (0, len_words):
-        if words[k] == "computer":
-            return True
+    if index == -1:
+        return index
 
-    return False
+    return index + len(WAKEUP_WORD)
 
-def handle(utterance):
-    #print 'Handling stuff...'
-
+def init_speech_command_handler():
     turn_light_on = DetectionSequence(sequence=['turn', 'light', 'on'])
     turn_on_light = DetectionSequence(sequence=['turn', 'on', 'light'])
     turn_on_lights = DetectionSequence(sequence=['turn', 'on', 'lights'])
@@ -80,14 +81,14 @@ def handle(utterance):
     on_cmd = SpeechCommand([device], set_light_on, on_detection_sequences)
     off_cmd = SpeechCommand([device], set_light_off, off_detection_sequences)
 
-    commands = [on_cmd, off_cmd]
+    handler = SpeechCommandHandler()
+    handler.add_command(on_cmd)
+    handler.add_command(off_cmd)
 
-    for c in commands:
-        if c.matches(utterance):
-            c.execute()
+    return handler
+
 
 while True:
-
     samples = rec.get_samples()
 
     audio, finalize = vad.process_audio(samples)
@@ -101,7 +102,10 @@ while True:
 
     print "\r%s                     " % user_utt,
 
+    # Look for wakeup word and command before the utterance has been finalized
+    cmd_index = find_cmd_start_index(user_utt):
+    if cmd_index != -1:
+        cmd_handler.process(user_utt, cmd_index)
+
     if finalize:
         print
-        if has_trigger_word(user_utt):
-            handle(user_utt)
