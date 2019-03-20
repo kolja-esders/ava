@@ -12,3 +12,5 @@ class SpeechCommandHandler:
         for c in self.commands:
             if c.matches(text):
                 c.execute()
+                return True
+        return False
